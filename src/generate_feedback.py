@@ -1,11 +1,17 @@
 from openai import OpenAI
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
 # Load environment variables from .env
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Base directory setup
+BASE_DIR = Path(__file__).resolve().parent.parent
+OUTPUT_DIR = BASE_DIR / "output"
+
 def load_file_content(file_path):
     with open(file_path, 'r') as f:
         return f.read()
@@ -45,12 +51,15 @@ Thank you!
     return response.choices[0].message.content
 
 if __name__ == "__main__":
-    pylint_report = load_file_content("pylint_report.txt")
-    test_results = load_file_content("test_results.txt")
+    # Read analysis files from output/
+    pylint_report = load_file_content(OUTPUT_DIR / "pylint_report.txt")
+    test_results = load_file_content(OUTPUT_DIR / "test_results.txt")
 
+    # Generate LLM feedback
     feedback = generate_llm_feedback(pylint_report, test_results)
 
-    with open("llm_feedback.txt", "w") as f:
+    # Save to llm_feedback.txt in output/
+    with open(OUTPUT_DIR / "llm_feedback.txt", "w") as f:
         f.write(feedback)
 
-    print("✅ LLM Feedback saved to llm_feedback.txt")
+    print("✅ LLM Feedback saved to output/llm_feedback.txt")

@@ -1,13 +1,8 @@
-
-[
-    {
-        "as_a": "User",
-        "i_want": "To register and login",
-        "so_that": "I can access personalized feedback and reports"
-    },
-    {
-        "as_a": "Admin",
-        "i_want": "To view user feedback analytics",
-        "so_that": "I can track performance"
-    }
-]
+{
+  "user_stories": [
+    "As a new user, I want to register using my email and password so that I can access the system.",
+    "As a returning user, I want to log in securely so that I can submit feedback.",
+    "As a user, I want to submit feedback through a simple form so that my concerns are heard.",
+    "As an admin, I want to view all user feedback in one place so I can manage them efficiently."
+  ]
+}

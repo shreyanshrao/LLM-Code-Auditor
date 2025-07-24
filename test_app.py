@@ -1,10 +1,10 @@
 import pytest
-from app import app, db, User, Feedback
+from src.app import app, db, User, Feedback  # <- updated import
 
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # in-memory test DB
     with app.test_client() as client:
         with app.app_context():
             db.create_all()
@@ -48,21 +48,21 @@ def test_feedback_unauthorized(client):
 
 def test_admin_feedback_access(client):
     with app.app_context():
-        # Create admin
+        # Create admin user manually
         admin = User(email="admin@example.com", password="hashed", is_admin=True)
         db.session.add(admin)
         db.session.commit()
 
-        # Log in admin
+        # Simulate login by setting session manually
         with client.session_transaction() as sess:
             sess['user_id'] = admin.id
 
-        # Submit a feedback (optional)
+        # Add feedback
         fb = Feedback(message="Test feedback", user_id=admin.id)
         db.session.add(fb)
         db.session.commit()
 
-        # Access admin feedback endpoint
+        # Hit admin endpoint
         response = client.get('/admin/feedbacks')
         assert response.status_code == 200
         assert any("Test feedback" in f["message"] for f in response.get_json())

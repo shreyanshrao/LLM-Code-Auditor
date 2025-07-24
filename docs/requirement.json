@@ -1,0 +1,3 @@
+{
+  "requirement": "The system should allow users to register, log in securely, and submit feedback. An admin user should be able to view all submitted feedback. The application must maintain user sessions, protect sensitive data using password hashing, and follow basic role-based access control."
+}

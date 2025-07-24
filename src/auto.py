@@ -1,5 +1,34 @@
+import json
 from datetime import date
+from pathlib import Path
 
+# Set base paths
+BASE_DIR = Path(__file__).resolve().parent.parent
+DOCS_DIR = BASE_DIR / "docs"
+OUTPUT_DIR = BASE_DIR / "output"
+REPORT_PATH = BASE_DIR / "final_report.md"
+
+# Load requirement
+with open(DOCS_DIR / "requirement.json", "r") as f:
+    requirement = json.load(f)["requirement"]
+
+# Load user stories
+with open(DOCS_DIR / "user_stories.json", "r") as f:
+    user_stories = json.load(f)["user_stories"]
+
+# Optional files (use fallback if not found)
+def safe_read_file(path, default="(Not available)"):
+    try:
+        with open(path, "r") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return default
+
+llm_feedback = safe_read_file(OUTPUT_DIR / "llm_feedback.txt")
+pylint_report = safe_read_file(OUTPUT_DIR / "pylint_report.txt")
+test_results = safe_read_file(OUTPUT_DIR / "test_results.txt")
+
+# Construct the final report
 report = f"""
 # Project Report
 
@@ -21,18 +50,21 @@ report = f"""
 - Admin-only access to feedback
 
 ## Testing
-- Tests executed using Pytest
-- 2 tests written and passed
+{test_results}
 
 ## Linting
-- Code Quality: 8.5/10 (Pylint)
+{pylint_report}
 
 ## AI Feedback
-(Read from LLM output)
+{llm_feedback}
 
 ## Conclusion
-Project meets all base requirements with test coverage and a moderate pylint score. Can be improved with more unit tests and better security (e.g., JWT).
+Project meets all base requirements with test coverage and a moderate pylint score.
+Can be improved with more unit tests and better security (e.g., JWT).
 """
 
-with open("final_report.md", "w") as f:
+# Write to final_report.md at root
+with open(REPORT_PATH, "w") as f:
     f.write(report)
+
+print(f"✅ Report generated successfully at: {REPORT_PATH}")
