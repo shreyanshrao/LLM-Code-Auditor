@@ -1,0 +1,13 @@
+
+[
+    {
+        "as_a": "User",
+        "i_want": "To register and login",
+        "so_that": "I can access personalized feedback and reports"
+    },
+    {
+        "as_a": "Admin",
+        "i_want": "To view user feedback analytics",
+        "so_that": "I can track performance"
+    }
+]
